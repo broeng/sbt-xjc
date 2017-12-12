@@ -9,7 +9,7 @@ lazy val sbtXjc = (project in file("."))
     licenses += ("BSD 3-Clause", url(
       "http://opensource.org/licenses/BSD-3-Clause")),
     organization := "org.scala-sbt.plugins",
-    version := "0.10-SNAPSHOT",
+    version := "0.9-CWC",
     sbtPlugin := true,
     publishMavenStyle := false,
 
