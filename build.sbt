@@ -1,6 +1,7 @@
 import sbt._
 import Keys._
-import bintray._
+import sbt.Keys.publishTo
+import sbt.Keys.version
 
 lazy val sbtXjc = (project in file("."))
   .settings(
@@ -11,9 +12,24 @@ lazy val sbtXjc = (project in file("."))
     version := "0.10-SNAPSHOT",
     sbtPlugin := true,
     publishMavenStyle := false,
-    bintrayOrganization := Some("sbt"),
-    bintrayRepository := "sbt-plugin-releases",
-    bintrayPackage := "sbt-xjc-imported"
+
+    //
+    // Publishing settings
+    //
+
+    credentials in ThisBuild += Credentials(Path.userHome / ".sbt" / ".credentials"),
+
+    publishTo in ThisBuild <<= version { (v: String) =>
+      val nexus = "https://nexus.cwconsult.dk/content/repositories/"
+      def repo(s: String): Resolver =
+        Resolver.url(s, url(nexus + s))(
+          Resolver.ivyStylePatterns)
+      if (v.trim.endsWith("SNAPSHOT"))
+        Some(repo("ivysnapshots"))
+      else
+        Some(repo("ivyreleases"))
+    }
+
   )
   .settings(
     crossSbtVersions := Seq("0.13.16", "1.0.2"),
